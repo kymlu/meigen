@@ -1,99 +1,82 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
+import MainScreen from './screens/MainScreen';
+import Header from './components/Header';
+import { useMemo, useState } from 'react';
+import { getFavourites, saveFavouritesToStorage } from './data/LocalStorageHelper';
 import { mainMottoList, Motto } from './data/data';
+import FavouritesScreen from './screens/FavouritesScreen';
 import { shuffle } from './GlobalHelper';
-import Icon from './components/Icon';
-import { ICON } from './data/icons';
+
+export type AppMode = "all" | "favs";
 
 function App() {
-  const [mottoIndex, setMottoIndex] = useState<number>(0);
-  const mottoList = useMemo(() => shuffle([...mainMottoList]), []);
-  const motto = useMemo<Motto>(() => mottoList[mottoIndex], [mottoIndex, mottoList]);
-  const lockRef = useRef(false);
-  const touchStartY = useRef<number | null>(null);
-
-  const nextMotto = (next: Boolean = true) => {
-    if (lockRef.current) return;
-    lockRef.current = true;
-
-    setMottoIndex(prev => {
-      if ((!next && prev <= 0) || (next && prev === mottoList.length - 1)) return prev;
-      
-      return prev + (next ? 1 : -1);
-    });
-
-    setTimeout(() => {
-      lockRef.current = false;
-    }, 75);
-  }
-
-  useEffect(() => {
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY;
-    }
-
-    window.addEventListener('touchstart', onTouchStart);
-    
-    const onTouchEnd = (e: TouchEvent) => {
-      if (touchStartY.current === null) return;
-
-      const endY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY.current - endY; // + = swipe up
-
-      const SWIPE_THRESHOLD = 50;
-
-      if (Math.abs(deltaY) < SWIPE_THRESHOLD) return;
-      
-      if (deltaY > 0) {
-        nextMotto();
-      } else {
-        nextMotto(false);
-      }
-
-      touchStartY.current = null;
-    };
-
-    window.addEventListener('touchend', onTouchEnd);
-
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (['ArrowDown', 'PageDown', 'ArrowRight', ' '].includes(e.key)) {
-        nextMotto();
-      } else if (['ArrowUp', 'ArrowLeft', "PageUp"].includes(e.key)) {
-        nextMotto(false);
-      }
-    }
-    window.addEventListener('keyup', onKeyUp);
-
-    return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
-      window.removeEventListener("keyup", onKeyUp);
-    }
+  const shuffledMottos = useMemo(() => {
+    return shuffle(mainMottoList)
   }, []);
 
+  const indexedMottos = useMemo(() => {
+    return shuffledMottos.reduce((acc, item) => {
+      const groupKey = item.id;
+      acc[groupKey] = item; // overwrite if duplicate key
+      return acc;
+    }, {} as Record<string, Motto>);
+  }, [shuffledMottos]);
+
+  const [favourites, setFavourites] = useState<Set<number>>(getFavourites());
+  const [appMode, setAppMode] = useState<AppMode>("all");
+  
+  const toggleLike = (mottoId: number) => {
+    if (favourites.has(mottoId)) {
+      console.log(`Remove from favourites:`, mottoId)
+      setFavourites(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(mottoId);
+        saveFavouritesToStorage(newSet);
+        return newSet;
+      });
+    } else {
+      console.log(`Add to favourites:`, mottoId)
+      setFavourites(prev => {
+        prev.add(mottoId);
+        saveFavouritesToStorage(prev);
+        return prev;
+      });
+    }
+  }
+
+  const onHeartBtnClicked = () => {
+    setAppMode("favs")
+  }
+
+  const onBackBtnClicked = () => {
+    setAppMode("all");
+  }
+
   return (
-    <div
-      className='flex flex-col items-center justify-center w-screen h-screen gap-6 px-10 font-serif text-center'>
-      <div className='text-5xl'>
-        {motto.text}
-      </div>
-      <div className='flex flex-col items-center justify-center gap-1 align-middle'>
-        {
-          motto.author &&
-          <div>
-            {motto.author}
-          </div>
-        }
-        {
-          motto.scene &&
-          <div>
-            {motto.scene}
-          </div>
-        }
-        <Icon src={ICON.favourite_outline}/>
-      </div>
+    <div className='font-serif text-gray-700'>
+      <Header 
+        appMode={appMode}
+        onHeartBtnClicked={onHeartBtnClicked}
+        onBackBtnClicked={onBackBtnClicked}/>
+      {
+        appMode === "all" &&
+        <MainScreen
+          shuffledMottos={shuffledMottos}
+          favouriteIds={favourites}
+          onLikeBtnPressed={(mottoId: number) => toggleLike(mottoId)}
+        />
+      }
+      {
+        appMode === "favs" &&
+        <FavouritesScreen
+          allMottos={indexedMottos}
+          favouriteIds={favourites}
+          onLikeBtnPressed={() => {}}
+          removeFavourite={(motto) => {toggleLike(motto.id)}}
+          />
+      }
     </div>
-  );
+  )
 }
 
 export default App;
