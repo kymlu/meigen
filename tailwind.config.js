@@ -5,9 +5,6 @@ module.exports = {
     extend: {
       colors: {
       },
-      fontFamily: {
-        ZAS: ['Zen Antique Soft', 'serif'],
-      },
     },
   },
   plugins: [],

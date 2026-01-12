@@ -59,7 +59,7 @@ function App() {
 
   return (
     <div
-      className='flex flex-col items-center justify-center w-screen h-screen gap-6 px-10 text-center font-ZAS'>
+      className='flex flex-col items-center justify-center w-screen h-screen gap-6 px-10 font-serif text-center'>
       <div className='text-5xl'>
         {motto.text}
       </div>
