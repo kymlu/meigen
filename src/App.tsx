@@ -10,6 +10,8 @@ import { shuffle } from './GlobalHelper';
 export type AppMode = "all" | "favs";
 
 function App() {
+  const [mottoIndex, setMottoIndex] = useState<number>(0);
+  
   const shuffledMottos = useMemo(() => {
     return shuffle(mainMottoList)
   }, []);
@@ -50,6 +52,18 @@ function App() {
     setAppMode("all");
   }
 
+  const changeMottoIndex = (next: boolean) => {
+    setMottoIndex(prev => {
+      if (!next && prev <= 0) {
+        return shuffledMottos.length - 1;
+      } else if (next && prev === shuffledMottos.length - 1) {
+        return 0;
+      } else {
+        return prev + (next ? 1 : -1);
+      }
+    });
+  }
+
   return (
     <div className='font-serif text-gray-700'>
       <Header 
@@ -62,6 +76,8 @@ function App() {
           shuffledMottos={shuffledMottos}
           favouriteIds={favourites}
           onLikeBtnPressed={(mottoId: number) => toggleLike(mottoId)}
+          mottoIndex={mottoIndex}
+          changeMottoIndex={changeMottoIndex}
         />
       }
       {

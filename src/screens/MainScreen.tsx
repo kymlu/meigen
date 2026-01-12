@@ -6,9 +6,14 @@ export default function MainScreen(props: {
   shuffledMottos: Motto[],
   onLikeBtnPressed: (mottoId: number) => void,
   favouriteIds: Set<number>,
+  mottoIndex: number,
+  changeMottoIndex: (next: boolean) => void,
 }) {
-  const [mottoIndex, setMottoIndex] = useState<number>(0);
-  const motto = useMemo<Motto>(() => props.shuffledMottos[mottoIndex], [mottoIndex, props.shuffledMottos]);
+  const motto = useMemo<Motto>(
+    () => props.shuffledMottos[props.mottoIndex],
+    [props.mottoIndex, props.shuffledMottos]
+  );
+  
   const lockRef = useRef(false);
   const touchStartX = useRef<number | null>(null);
 
@@ -16,20 +21,10 @@ export default function MainScreen(props: {
     props.onLikeBtnPressed(motto.id);
   }
 
-  const nextMotto = (next: Boolean = true) => {
+  const nextMotto = (next: boolean = true) => {
     if (lockRef.current) return;
     lockRef.current = true;
-
-    setMottoIndex(prev => {
-      if (!next && prev <= 0) {
-        return props.shuffledMottos.length - 1;
-      } else if (next && prev === props.shuffledMottos.length - 1) {
-        return 0;
-      } else {
-        return prev + (next ? 1 : -1);
-      }
-    });
-
+    props.changeMottoIndex(next);
     setTimeout(() => {
       lockRef.current = false;
     }, 75);
