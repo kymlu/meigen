@@ -40,7 +40,7 @@ function App() {
     });
   }
 
-  const onHeartBtnClicked = () => {
+  const onFavouritesBtnClicked = () => {
     console.log("Go to favourites")
     setAppMode("favs");
   }
@@ -54,7 +54,7 @@ function App() {
     <div className='font-serif text-gray-700'>
       <Header 
         appMode={appMode}
-        onHeartBtnClicked={onHeartBtnClicked}
+        onFavouritesBtnClicked={onFavouritesBtnClicked}
         onBackBtnClicked={onBackBtnClicked}/>
       {
         appMode === "all" &&

@@ -4,15 +4,15 @@ import IconBtn from "./IconBtn";
 
 export default function Header (props: {
   appMode: AppMode,
-  onHeartBtnClicked: () => void,
+  onFavouritesBtnClicked: () => void,
   onBackBtnClicked: () => void,
 }) {
   return <header className="absolute top-0 z-10 flex p-5">
     {
       props.appMode === "all" &&
       <IconBtn
-        src={ICON.favourite_filled}
-        onClick={props.onHeartBtnClicked}
+        src={ICON.bookmark_heart}
+        onClick={props.onFavouritesBtnClicked}
         alt="いいねを見る"
         />
     }
