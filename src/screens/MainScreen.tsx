@@ -10,7 +10,7 @@ export default function MainScreen(props: {
   const [mottoIndex, setMottoIndex] = useState<number>(0);
   const motto = useMemo<Motto>(() => props.shuffledMottos[mottoIndex], [mottoIndex, props.shuffledMottos]);
   const lockRef = useRef(false);
-  const touchStartY = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const onLikeBtnPressed = () => {
     props.onLikeBtnPressed(motto.id);
@@ -37,28 +37,28 @@ export default function MainScreen(props: {
 
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY;
+      touchStartX.current = e.touches[0].clientX;
     }
 
     window.addEventListener('touchstart', onTouchStart);
     
     const onTouchEnd = (e: TouchEvent) => {
-      if (touchStartY.current === null) return;
+      if (touchStartX.current === null) return;
 
-      const endY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY.current - endY; // + = swipe up
+      const endX = e.changedTouches[0].clientX;
+      const deltaX = touchStartX.current - endX; // + = swipe left
 
       const SWIPE_THRESHOLD = 50;
 
-      if (Math.abs(deltaY) < SWIPE_THRESHOLD) return;
+      if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
       
-      if (deltaY > 0) {
+      if (deltaX > 0) {
         nextMotto();
       } else {
         nextMotto(false);
       }
 
-      touchStartY.current = null;
+      touchStartX.current = null;
     };
 
     window.addEventListener('touchend', onTouchEnd);
@@ -82,28 +82,30 @@ export default function MainScreen(props: {
   return (
     <div className="h-[calc(100svh-6rem)] max-h-[calc(100svh-6rem)] justify-center items-center flex flex-col box-border mx-10 mt-16 mb-8 overflow-hidden">
       <div
-        className='flex flex-col items-center justify-center flex-1 gap-6 text-center'>
-        <div className='text-5xl'>
-          {motto.text}
+        className='py-2 overflow-auto text-center'>
+        <div className="flex flex-col items-center justify-center flex-1 gap-6">
+          <div className='text-5xl'>
+            {motto.text}
+          </div>
+          <div className='flex flex-col items-center justify-center h-full gap-1 align-middle'>
+            {
+              motto.author &&
+              <div>
+                {motto.author}
+              </div>
+            }
+            {
+              motto.scene &&
+              <div>
+                {motto.scene}
+              </div>
+            }
+          </div>
+          <FavouriteBtn
+            onClick={onLikeBtnPressed}
+            isSelected={props.favouriteIds.has(motto.id)}
+          />
         </div>
-        <div className='flex flex-col items-center justify-center gap-1 align-middle'>
-          {
-            motto.author &&
-            <div>
-              {motto.author}
-            </div>
-          }
-          {
-            motto.scene &&
-            <div>
-              {motto.scene}
-            </div>
-          }
-        </div>
-        <FavouriteBtn
-          onClick={onLikeBtnPressed}
-          isSelected={props.favouriteIds.has(motto.id)}
-        />
       </div>
     </div>
   )
