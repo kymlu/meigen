@@ -45,7 +45,8 @@ export const mainMottoList: Motto[] = [
   {
     id: 3,
     text: "オーケイティー",
-    author: "らくだガール"
+    author: "らくだガール",
+    scene: "ケイティーの初体験日"
   },
   {
     id: 4,
