@@ -37,12 +37,14 @@ export default function MainScreen(props: {
 
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
+      if (lockRef.current) return;
       touchStartX.current = e.touches[0].clientX;
     }
 
     window.addEventListener('touchstart', onTouchStart);
     
     const onTouchEnd = (e: TouchEvent) => {
+      if (lockRef.current) return;
       if (touchStartX.current === null) return;
 
       const endX = e.changedTouches[0].clientX;
@@ -64,6 +66,7 @@ export default function MainScreen(props: {
     window.addEventListener('touchend', onTouchEnd);
 
     const onKeyUp = (e: KeyboardEvent) => {
+      if (lockRef.current) return;
       if (['ArrowDown', 'PageDown', 'ArrowRight', ' '].includes(e.key)) {
         nextMotto();
       } else if (['ArrowUp', 'ArrowLeft', "PageUp"].includes(e.key)) {
