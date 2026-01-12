@@ -7,7 +7,7 @@ export default function Header (props: {
   onHeartBtnClicked: () => void,
   onBackBtnClicked: () => void,
 }) {
-  return <header className="absolute top-0 z-10 flex p-2">
+  return <header className="absolute top-0 z-10 flex p-5">
     {
       props.appMode === "all" &&
       <IconBtn

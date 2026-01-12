@@ -5,7 +5,9 @@ export default function IconBtn(props: {
   src: string;
   alt: string,
 }) {
-  return <button onClick={props.onClick}>
+  return <button
+    className="w-6 h-6"
+    onClick={props.onClick}>
       <Icon
         alt={props.alt}
         src={props.src}/>

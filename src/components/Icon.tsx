@@ -5,6 +5,6 @@ export default function Icon (props: {
   return <img
     src={props.src}
     alt={props.alt}
-    className="w-10 h-10"
+    className="w-6 h-6"
     />
 }
