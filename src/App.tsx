@@ -1,35 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import { mainMottoList, Motto } from './data/data';
 import { shuffle } from './GlobalHelper';
+import Icon from './components/Icon';
+import { ICON } from './data/icons';
 
 function App() {
-  const [motto, setMotto] = useState<Motto>({text: "", id: 9});
-  const [mottoList, setMottoList] = useState<Motto[]>([]);
+  const [mottoIndex, setMottoIndex] = useState<number>(0);
+  const mottoList = useMemo(() => shuffle([...mainMottoList]), []);
+  const motto = useMemo<Motto>(() => mottoList[mottoIndex], [mottoIndex, mottoList]);
   const lockRef = useRef(false);
+  const touchStartY = useRef<number | null>(null);
 
-  useEffect(() => {
-    randomMotto();
-  }, []);
-
-  const randomMotto = () => {
+  const nextMotto = (next: Boolean = true) => {
     if (lockRef.current) return;
     lockRef.current = true;
 
-    setMottoList(prevList => {
-      let list = prevList;
-
-      if (list.length === 0) {
-        list = shuffle(
-          mainMottoList.filter(m => m.id !== motto.id)
-        );
-      }
-
-      const next = list[list.length - 1];
-      const remaining = list.slice(0, -1);
-
-      setMotto(next);
-      return remaining;
+    setMottoIndex(prev => {
+      if ((!next && prev <= 0) || (next && prev === mottoList.length - 1)) return prev;
+      
+      return prev + (next ? 1 : -1);
     });
 
     setTimeout(() => {
@@ -38,20 +28,44 @@ function App() {
   }
 
   useEffect(() => {
-    const onTouchEnd = () => {
-      randomMotto();
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+    }
+
+    window.addEventListener('touchstart', onTouchStart);
+    
+    const onTouchEnd = (e: TouchEvent) => {
+      if (touchStartY.current === null) return;
+
+      const endY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY.current - endY; // + = swipe up
+
+      const SWIPE_THRESHOLD = 50;
+
+      if (Math.abs(deltaY) < SWIPE_THRESHOLD) return;
+      
+      if (deltaY > 0) {
+        nextMotto();
+      } else {
+        nextMotto(false);
+      }
+
+      touchStartY.current = null;
     };
 
     window.addEventListener('touchend', onTouchEnd);
 
     const onKeyUp = (e: KeyboardEvent) => {
       if (['ArrowDown', 'PageDown', 'ArrowRight', ' '].includes(e.key)) {
-        randomMotto();
+        nextMotto();
+      } else if (['ArrowUp', 'ArrowLeft', "PageUp"].includes(e.key)) {
+        nextMotto(false);
       }
     }
     window.addEventListener('keyup', onKeyUp);
 
     return () => {
+      window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("keyup", onKeyUp);
     }
@@ -63,7 +77,7 @@ function App() {
       <div className='text-5xl'>
         {motto.text}
       </div>
-      <div className=''>
+      <div className='flex flex-col items-center justify-center gap-1 align-middle'>
         {
           motto.author &&
           <div>
@@ -76,6 +90,7 @@ function App() {
             {motto.scene}
           </div>
         }
+        <Icon src={ICON.favourite_outline}/>
       </div>
     </div>
   );
