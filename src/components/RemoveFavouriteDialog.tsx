@@ -9,11 +9,11 @@ export default function RemoveFavouriteDialog(props: {
 }) {
   return <dialog
     ref={props.dialogRef}
-    className="p-4 rounded-lg backdrop:bg-black backdrop:opacity-30">
+    className="p-8 rounded-lg backdrop:bg-black backdrop:opacity-30">
     <div className="flex flex-col gap-2">
-      <span>以下の名言を削除する？</span>
-      <span className="py-4 text-center">{props.motto?.text}</span>
-      <div className="flex gap-2">
+      <b>以下の名言を削除する？</b>
+      <span className="p-4 text-center">{props.motto?.text}</span>
+      <div className="flex justify-center gap-2">
         <button
           onClick={props.onCancel}
           className="w-32 p-2 border rounded-md">キャンセル</button>
