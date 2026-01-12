@@ -26,29 +26,27 @@ function App() {
   const [appMode, setAppMode] = useState<AppMode>("all");
   
   const toggleLike = (mottoId: number) => {
-    if (favourites.has(mottoId)) {
-      console.log(`Remove from favourites:`, mottoId)
-      setFavourites(prev => {
-        const newSet = new Set(prev);
+    setFavourites(prev => {
+      const newSet = new Set(prev);
+      if (favourites.has(mottoId)) {
+        console.log(`Remove from favourites:`, mottoId)
         newSet.delete(mottoId);
-        saveFavouritesToStorage(newSet);
-        return newSet;
-      });
-    } else {
-      console.log(`Add to favourites:`, mottoId)
-      setFavourites(prev => {
-        prev.add(mottoId);
-        saveFavouritesToStorage(prev);
-        return prev;
-      });
-    }
+      } else {
+        console.log(`Add to favourites:`, mottoId)
+        newSet.add(mottoId);
+      }
+      saveFavouritesToStorage(newSet);
+      return newSet;
+    });
   }
 
   const onHeartBtnClicked = () => {
-    setAppMode("favs")
+    console.log("Go to favourites")
+    setAppMode("favs");
   }
 
   const onBackBtnClicked = () => {
+    console.log("Return to main page")
     setAppMode("all");
   }
 
