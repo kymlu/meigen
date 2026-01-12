@@ -21,9 +21,13 @@ export default function MainScreen(props: {
     lockRef.current = true;
 
     setMottoIndex(prev => {
-      if ((!next && prev <= 0) || (next && prev === props.shuffledMottos.length - 1)) return prev;
-      
-      return prev + (next ? 1 : -1);
+      if (!next && prev <= 0) {
+        return props.shuffledMottos.length - 1;
+      } else if (next && prev === props.shuffledMottos.length - 1) {
+        return 0;
+      } else {
+        return prev + (next ? 1 : -1);
+      }
     });
 
     setTimeout(() => {
@@ -76,29 +80,31 @@ export default function MainScreen(props: {
   }, []);
 
   return (
-    <div
-      className='flex flex-col items-center justify-center w-screen h-screen gap-6 px-10 text-center'>
-      <div className='text-5xl'>
-        {motto.text}
+    <div className="h-[calc(100svh-6rem)] max-h-[calc(100svh-6rem)] justify-center items-center flex flex-col box-border mx-10 mt-16 mb-8 overflow-hidden">
+      <div
+        className='flex flex-col items-center justify-center flex-1 gap-6 text-center'>
+        <div className='text-5xl'>
+          {motto.text}
+        </div>
+        <div className='flex flex-col items-center justify-center gap-1 align-middle'>
+          {
+            motto.author &&
+            <div>
+              {motto.author}
+            </div>
+          }
+          {
+            motto.scene &&
+            <div>
+              {motto.scene}
+            </div>
+          }
+        </div>
+        <FavouriteBtn
+          onClick={onLikeBtnPressed}
+          isSelected={props.favouriteIds.has(motto.id)}
+        />
       </div>
-      <div className='flex flex-col items-center justify-center gap-1 align-middle'>
-        {
-          motto.author &&
-          <div>
-            {motto.author}
-          </div>
-        }
-        {
-          motto.scene &&
-          <div>
-            {motto.scene}
-          </div>
-        }
-      </div>
-      <FavouriteBtn
-        onClick={onLikeBtnPressed}
-        isSelected={props.favouriteIds.has(motto.id)}
-      />
     </div>
   )
 }
