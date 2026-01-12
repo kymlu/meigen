@@ -82,7 +82,7 @@ export default function MainScreen(props: {
       <div
         className='py-2 overflow-auto text-center'>
         <div className="flex flex-col items-center justify-center flex-1 gap-6">
-          <div className='text-5xl'>
+          <div className='text-2xl'>
             {motto.text}
           </div>
           <div className='flex flex-col items-center justify-center h-full gap-1 align-middle'>
