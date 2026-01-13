@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/meigen/static/css/main.b75cd8bd.css",
-    "main.js": "/meigen/static/js/main.b477e046.js",
+    "main.css": "/meigen/static/css/main.37367591.css",
+    "main.js": "/meigen/static/js/main.3870c685.js",
     "static/js/453.4d96cfc7.chunk.js": "/meigen/static/js/453.4d96cfc7.chunk.js",
     "index.html": "/meigen/index.html",
-    "main.b75cd8bd.css.map": "/meigen/static/css/main.b75cd8bd.css.map",
-    "main.b477e046.js.map": "/meigen/static/js/main.b477e046.js.map",
+    "main.37367591.css.map": "/meigen/static/css/main.37367591.css.map",
+    "main.3870c685.js.map": "/meigen/static/js/main.3870c685.js.map",
     "453.4d96cfc7.chunk.js.map": "/meigen/static/js/453.4d96cfc7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b75cd8bd.css",
-    "static/js/main.b477e046.js"
+    "static/css/main.37367591.css",
+    "static/js/main.3870c685.js"
   ]
 }
