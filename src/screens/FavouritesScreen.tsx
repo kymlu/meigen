@@ -20,12 +20,14 @@ export default function FavouritesScreen (props: {
   var [mottoToRemove, setMottoToRemove] = useState<Motto>();
 
   var filteredFavourites = useMemo(() => {
-    return favourites.filter(motto => {
-      var lowerCaseSearchTerm = searchTerm.toLowerCase();
-      return motto.scene?.toLowerCase().includes(lowerCaseSearchTerm) ||
-        motto.author?.toLowerCase().includes(lowerCaseSearchTerm) ||
-        motto.text.toLowerCase().includes(lowerCaseSearchTerm)}
-    )
+    return searchTerm.length === 0 ?
+      favourites : 
+      favourites.filter(motto => {
+        var lowerCaseSearchTerm = searchTerm.toLowerCase();
+        return motto.scene?.toLowerCase()?.includes(lowerCaseSearchTerm) ||
+          motto.author?.toLowerCase()?.includes(lowerCaseSearchTerm) ||
+          motto.text.toLowerCase().includes(lowerCaseSearchTerm)}
+      )
   }, [searchTerm, favourites]);
 
   const onRemoveBtnPressed = (motto: Motto) => {
