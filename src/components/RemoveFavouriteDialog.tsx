@@ -11,7 +11,7 @@ export default function RemoveFavouriteDialog(props: {
     ref={props.dialogRef}
     className="p-8 rounded-lg backdrop:bg-black backdrop:opacity-30">
     <div className="flex flex-col gap-2">
-      <b>以下の名言を削除する？</b>
+      <b>いいねを解除しますか？</b>
       <span className="p-4 text-center">{props.motto?.text}</span>
       <div className="flex justify-center gap-2">
         <button
