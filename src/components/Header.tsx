@@ -19,7 +19,7 @@ export default function Header (props: {
     {
       props.appMode === "favs" &&
       <IconBtn
-        src={ICON.arrow_back_ios_black}
+        src={ICON.arrow_back_ios_new}
         onClick={props.onBackBtnClicked}
         alt="戻る"
       />
