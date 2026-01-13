@@ -12,7 +12,9 @@ export default function FavouritesScreen (props: {
 }) {
   var favourites = useMemo(
     () => { return Array.from(props.favouriteIds)
-      .map(id => props.allMottos[id])},
+      .map(id => props.allMottos[id] ?? null)
+      .filter(motto => motto !== null)
+    },
     [props.favouriteIds]
   );
 
