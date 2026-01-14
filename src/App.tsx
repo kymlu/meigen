@@ -70,25 +70,27 @@ function App() {
         appMode={appMode}
         onFavouritesBtnClicked={onFavouritesBtnClicked}
         onBackBtnClicked={onBackBtnClicked}/>
-      {
-        appMode === "all" &&
-        <MainScreen
-          shuffledMottos={shuffledMottos}
-          favouriteIds={favourites}
-          onLikeBtnPressed={(mottoId: number) => toggleLike(mottoId)}
-          mottoIndex={mottoIndex}
-          changeMottoIndex={changeMottoIndex}
-        />
-      }
-      {
-        appMode === "favs" &&
-        <FavouritesScreen
-          allMottos={indexedMottos}
-          favouriteIds={favourites}
-          onLikeBtnPressed={() => {}}
-          removeFavourite={(motto) => {toggleLike(motto.id)}}
+      <main>
+        {
+          appMode === "all" &&
+          <MainScreen
+            shuffledMottos={shuffledMottos}
+            favouriteIds={favourites}
+            onLikeBtnPressed={(mottoId: number) => toggleLike(mottoId)}
+            mottoIndex={mottoIndex}
+            changeMottoIndex={changeMottoIndex}
           />
-      }
+        }
+        {
+          appMode === "favs" &&
+          <FavouritesScreen
+            allMottos={indexedMottos}
+            favouriteIds={favourites}
+            onLikeBtnPressed={() => {}}
+            removeFavourite={(motto) => {toggleLike(motto.id)}}
+            />
+        }
+      </main>
     </div>
   )
 }
